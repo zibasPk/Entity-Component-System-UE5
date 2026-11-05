@@ -2,6 +2,7 @@
 /build/
 /build-*/
 /out/
+.vscode/
 
 # Local IDE state and CMake settings
 /.vs/

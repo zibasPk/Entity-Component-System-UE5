@@ -12,7 +12,7 @@ bool ecs::SparseSet::contains(Entity to_check) const
     if (!to_check.is_valid())
         return false;
 
-    if (!sparse_contains_valid_index(to_check.index)) // check if sparse index is valid
+    if (!index_of(to_check).has_value()) // check if sparse index is valid
         return false;
     
     std::uint32_t dense_position = sparse_.at(to_check.index);
@@ -26,15 +26,6 @@ bool ecs::SparseSet::contains(Entity to_check) const
     return false;
 }
 
-bool ecs::SparseSet::sparse_contains_valid_index(EntityIndex to_check) const
-{
-    if (to_check >= sparse_.size()) // check if sparse index is valid
-        return false;
-    if (sparse_[to_check] == kInvalidSparseEntry)
-        return false;
-    return true;
-}
-
 bool ecs::SparseSet::insert(Entity to_insert)
 {
     if (!to_insert.is_valid())
@@ -46,7 +37,7 @@ bool ecs::SparseSet::insert(Entity to_insert)
     if (to_insert.index >= kMaxEntities)
         return false;
 
-    if (sparse_contains_valid_index(to_insert.index))
+    if (index_of(to_insert).has_value())
         if (dense_[sparse_[to_insert.index]].generation != to_insert.generation)
             return false;
 
@@ -80,7 +71,7 @@ bool ecs::SparseSet::erase(Entity to_erase)
     return true;
 }
 
-std::uint32_t ecs::SparseSet::size() const
+std::size_t ecs::SparseSet::size() const
 {
     return dense_.size();
 }
@@ -88,4 +79,19 @@ std::uint32_t ecs::SparseSet::size() const
 bool ecs::SparseSet::is_empty() const
 {
     return dense_.size() == 0;
+}
+
+std::optional<std::size_t> ecs::SparseSet::index_of(Entity entity) const
+{
+    if (entity.index >= sparse_.size()) // check if sparse index is valid
+        return std::nullopt;
+    if (sparse_[entity.index] == kInvalidSparseEntry)
+        return std::nullopt;
+    
+    return sparse_[entity.index];
+}
+
+std::span<const ecs::Entity> ecs::SparseSet::entities() const
+{
+    return dense_;
 }

@@ -2,6 +2,8 @@
 #include <vector>
 #include <limits>
 #include <ecs/types.hpp>
+#include <optional>
+#include <span>
 
 namespace ecs {
 
@@ -19,11 +21,12 @@ namespace ecs {
 
         SparseSet();
         bool contains(Entity to_check) const;
-        bool sparse_contains_valid_index(EntityIndex to_check) const;
         bool insert(Entity to_insert);
         bool erase(Entity to_erase);
-        std::uint32_t size() const;
+        std::size_t size() const;
         bool is_empty() const;
+        std::optional<std::size_t> index_of(Entity entity) const;
+        std::span<const Entity> entities() const;
 
     private:
         static constexpr std::uint32_t kInvalidSparseEntry = std::numeric_limits<std::uint32_t>::max();
