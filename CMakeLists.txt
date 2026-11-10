@@ -6,5 +6,5 @@ add_library(ecs STATIC
 target_include_directories(ecs PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_features(ecs PUBLIC cxx_std_20)
 
-add_executable(ecs_test examples/main.cpp)
-target_link_libraries(ecs_test PRIVATE ecs)
+# add_executable(ecs_test examples/main.cpp)
+# target_link_libraries(ecs_test PRIVATE ecs)
