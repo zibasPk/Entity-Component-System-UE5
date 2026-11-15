@@ -1,5 +1,7 @@
 #include "ecs/sparse_set.hpp"
 #include "ecs/constants.hpp"
+#include <utility>
+
 
 ecs::SparseSet::SparseSet()
 {
@@ -38,10 +40,11 @@ bool ecs::SparseSet::erase(Entity to_erase)
         dense_.pop_back();
     }
     else { // if its not the last we move the last element in its position
-        Entity last_in_dense = dense_[dense_.size() - 1];
-        dense_[dense_index_to_erase] = last_in_dense;
+        Entity& last_in_dense = dense_[dense_.size() - 1];
+        dense_[dense_index_to_erase] = std::move(last_in_dense);
+        auto last_in_dense_idx = last_in_dense.index;
         dense_.pop_back();
-        sparse_[last_in_dense.index] = dense_index_to_erase;
+        sparse_[last_in_dense_idx] = dense_index_to_erase;
     }
 
     sparse_[to_erase.index] = kInvalidIndex;

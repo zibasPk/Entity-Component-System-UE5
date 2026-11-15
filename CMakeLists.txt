@@ -3,6 +3,7 @@ PROJECT(ECSCpp VERSION 0.1.0 LANGUAGES CXX)
 add_library(ecs STATIC 
 "${CMAKE_CURRENT_SOURCE_DIR}/src/entity_manager.cpp" 
 "${CMAKE_CURRENT_SOURCE_DIR}/src/sparse_set.cpp"
+"${CMAKE_CURRENT_SOURCE_DIR}/src/registry.cpp"
 )
 target_include_directories(ecs PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include")
 target_compile_features(ecs PUBLIC cxx_std_20)
