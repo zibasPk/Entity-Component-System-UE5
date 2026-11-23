@@ -26,7 +26,7 @@ bool ecs::SparseSet::insert(Entity to_insert)
     return true;
 }
 
-bool ecs::SparseSet::erase(Entity to_erase)
+bool ecs::SparseSet::erase(Entity to_erase) noexcept
 {
     if (!to_erase.is_valid())
         return false;
@@ -34,7 +34,7 @@ bool ecs::SparseSet::erase(Entity to_erase)
     if (!index_of(to_erase).has_value())
         return false;
         
-    std::uint32_t dense_index_to_erase = sparse_.at(to_erase.index);
+    std::uint32_t dense_index_to_erase = sparse_[to_erase.index];
 
     if (dense_index_to_erase == dense_.size() - 1) { // if its the last element we simply remove it
         dense_.pop_back();
@@ -51,17 +51,17 @@ bool ecs::SparseSet::erase(Entity to_erase)
     return true;
 }
 
-std::size_t ecs::SparseSet::size() const
+std::size_t ecs::SparseSet::size() const noexcept
 {
     return dense_.size();
 }
 
-bool ecs::SparseSet::is_empty() const
+bool ecs::SparseSet::is_empty() const noexcept
 {
     return dense_.size() == 0;
 }
 
-bool ecs::SparseSet::is_valid_sparse(std::uint32_t index) const
+bool ecs::SparseSet::is_valid_sparse(std::uint32_t index) const noexcept
 {
     if (index >= sparse_.size()) // check if sparse bounds
         return false;
@@ -74,7 +74,7 @@ bool ecs::SparseSet::is_valid_sparse(std::uint32_t index) const
     return true;
 }
 
-std::optional<std::size_t> ecs::SparseSet::index_of(Entity entity) const
+std::optional<std::size_t> ecs::SparseSet::index_of(Entity entity) const noexcept
 {
     if (!is_valid_sparse(entity.index)) 
         return std::nullopt;
@@ -86,7 +86,7 @@ std::optional<std::size_t> ecs::SparseSet::index_of(Entity entity) const
     return sparse_[entity.index];
 }
 
-std::span<const ecs::Entity> ecs::SparseSet::entities() const
+std::span<const ecs::Entity> ecs::SparseSet::entities() const noexcept
 {
     return dense_;
 }

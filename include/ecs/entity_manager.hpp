@@ -24,8 +24,8 @@ namespace ecs {
 
             EntityManager();
 
-            std::uint32_t alive_count() const;
-            bool is_alive(Entity to_check) const;
+            std::uint32_t alive_count() const noexcept;
+            bool is_alive(Entity to_check) const noexcept;
             Entity create_entity();
             bool destroy_entity(Entity to_destroy);
         

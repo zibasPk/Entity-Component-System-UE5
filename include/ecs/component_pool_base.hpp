@@ -5,8 +5,18 @@ namespace ecs {
 
     class IComponentPool {
     public:
+        // disables copy and move
+        IComponentPool(const IComponentPool&) = delete;
+        IComponentPool& operator=(const IComponentPool&) = delete;
+        IComponentPool(IComponentPool&&) = delete;
+        IComponentPool& operator=(IComponentPool&&) = delete;
+
         virtual ~IComponentPool() = default;
-        virtual bool erase(Entity entity) = 0;
-        virtual bool contains(Entity entity) const = 0;
+        virtual ComponentTypeId type_id() const noexcept = 0;
+        virtual bool erase(Entity entity) noexcept = 0;
+        virtual bool contains(Entity entity) const noexcept = 0;
+
+    protected:
+        IComponentPool() = default;
     };
 }

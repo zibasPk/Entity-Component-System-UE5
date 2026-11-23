@@ -7,17 +7,17 @@ namespace ecs {
         entity_records_.reserve(kMaxEntities);
     }
 
-    std::uint32_t EntityManager::alive_count() const
+    std::uint32_t EntityManager::alive_count() const noexcept
     {
         return alive_count_;
     }
 
-    bool EntityManager::is_alive(Entity to_check) const
+    bool EntityManager::is_alive(Entity to_check) const noexcept
     {   
         if (to_check.index >= entity_records_.size())
             return false;
    
-        RecordSlot record = entity_records_.at(to_check.index);
+        RecordSlot record = entity_records_[to_check.index];
         if (record.generation == to_check.generation)
             return record.is_alive;
         
@@ -45,7 +45,7 @@ namespace ecs {
         free_indices_.pop();
 
         // find the record, update its generation and set it to be alive
-        RecordSlot &record = entity_records_.at(new_entity.index);
+        RecordSlot &record = entity_records_[new_entity.index];
         record.generation += 1;
         record.is_alive = true;
         alive_count_++;
@@ -58,7 +58,7 @@ namespace ecs {
     {
         // find the record in the records and set it to not alive
         if (is_alive(to_destroy)) {
-            RecordSlot &record = entity_records_.at(to_destroy.index);
+            RecordSlot &record = entity_records_[to_destroy.index];
             if (record.generation != kMaxGeneration) // guard for generation exhaustion
                 free_indices_.push(to_destroy.index);
             record.is_alive = false;
