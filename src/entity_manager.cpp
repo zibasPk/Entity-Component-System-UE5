@@ -35,7 +35,7 @@ namespace ecs {
             entity_records_.push_back(RecordSlot{kFirstValidGeneration, true});
             alive_count_++;
 
-            new_entity.index = entity_records_.size() - 1;
+            new_entity.index = static_cast<EntityIndex>(entity_records_.size() - 1);
             new_entity.generation = kFirstValidGeneration;
             return new_entity;
         }

@@ -21,7 +21,7 @@ bool ecs::SparseSet::insert(Entity to_insert)
         return false;
     
     dense_.push_back(to_insert);
-    sparse_[to_insert.index] = dense_.size() - 1;
+    sparse_[to_insert.index] = static_cast<std::uint32_t>(dense_.size() - 1);
 
     return true;
 }
