@@ -20,15 +20,20 @@ namespace ecs {
         static_assert(std::is_nothrow_move_assignable_v<T>,
             "Component types must support non-throwing move assingment move.");
     public:
-        template <typename... Args>
-        T* try_emplace(Entity entity, Args&&... args);
+        template <typename... Args> T* try_emplace(Entity entity, Args&&... args);
         T* try_get(Entity entity) noexcept;
         const T* try_get(Entity entity) const noexcept;
         ComponentTypeId type_id() const noexcept override;
+        /// @brief Erases the given entity from the pool
+        /// @param entity 
+        /// @return true if removed, false if nothing to remove
         bool erase(Entity entity) noexcept override;
         bool contains(Entity entity) const noexcept override;
         std::size_t size() const noexcept;
         bool is_empty() const noexcept;
+        std::span<const Entity> entities() const noexcept;   // forwards to entity_set_.entities()
+        std::span<T> components() noexcept;       // { components_.data(), components_.size() }
+        std::span<const T> components() const noexcept;  
     private:
         SparseSet entity_set_; 
         std::vector<T> components_;
@@ -88,7 +93,8 @@ namespace ecs {
     }
 
     template <typename T>
-    inline T* ComponentPool<T>::try_get(Entity entity) noexcept{
+    inline T* ComponentPool<T>::try_get(Entity entity) noexcept
+    {
         return const_cast<T*>(
             std::as_const(*this).try_get(entity)
         );
@@ -113,5 +119,23 @@ namespace ecs {
         return components_.empty();
     }
 
- 
+    template <typename T>
+    inline std::span<const Entity> ComponentPool<T>::entities() const noexcept
+    {
+        return entity_set_.entities();
+    }
+
+    template <typename T>
+    inline std::span<T> ComponentPool<T>::components() noexcept
+    {
+        return const_cast<T*>(
+            std::as_const(*this).components()
+        );
+    }
+
+    template <typename T>
+    inline std::span<const T> ComponentPool<T>::components() const noexcept
+    {
+        return components_;
+    }
 }

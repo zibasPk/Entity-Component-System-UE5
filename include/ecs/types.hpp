@@ -4,7 +4,8 @@
 
 namespace ecs{ 
 
-    using ComponentType = std::uint32_t;
+    using ComponentTypeId = std::uint64_t; // stable, name-derived hash
+    using ComponentIndex  = std::uint32_t; // slot in the registrys' component pools collection, < kMaxComponents
     using EntityIndex = std::uint32_t;
     using Generation = std::uint32_t;
 

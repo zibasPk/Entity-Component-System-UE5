@@ -1,3 +1,4 @@
-- suppose this is a learning project for a solo developer, suppose he has programming experience
+- this is a learning project for a solo developer, suppose he has programming experience
 - when giving instructions or suggestion only use best practices for a healthy expandable project
+- when introducing a new c++ concept that isn't already in the project explain the concept in detail
 - NEVER write or modify any code if the user doesn't explicity ask for it. Instead explain the steps necessary to implement it themselves, you can tell the user the fuctions he needs and their signature.
