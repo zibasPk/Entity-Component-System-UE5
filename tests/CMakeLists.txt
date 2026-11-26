@@ -28,6 +28,7 @@ add_executable(ecs_tests
     sparse_set_test.cpp
     entity_manager_test.cpp
     component_pool_test.cpp
+    view_test.cpp
 )
 
 target_link_libraries(ecs_tests PRIVATE
