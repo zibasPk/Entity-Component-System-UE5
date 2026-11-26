@@ -13,11 +13,11 @@ bool Registry::destroy_entity(Entity entity)
     if (!manager_.is_alive(entity))
         return false;
 
+    manager_.destroy_entity(entity);
+
     for (auto& record : component_pools_) {
         record.pool->erase(entity);
     }
-    // make the entity available for reuse as last step
-    manager_.destroy_entity(entity);
     
     return true;
 }

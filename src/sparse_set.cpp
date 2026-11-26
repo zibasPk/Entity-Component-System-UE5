@@ -47,7 +47,7 @@ bool ecs::SparseSet::erase(Entity to_erase) noexcept
         sparse_[last_in_dense_idx] = dense_index_to_erase;
     }
 
-    sparse_[to_erase.index] = kInvalidIndex;
+    sparse_[to_erase.index] = kInvalidSparseEntry;
     return true;
 }
 

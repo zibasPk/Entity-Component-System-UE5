@@ -18,7 +18,7 @@ namespace ecs {
         static_assert(std::is_nothrow_destructible_v<T>,
             "Component types must support non-throwing destruction.");
         static_assert(std::is_nothrow_move_assignable_v<T>,
-            "Component types must support non-throwing move assingment move.");
+            "Component types must support non-throwing move assingment."); 
     public:
         template <typename... Args> T* try_emplace(Entity entity, Args&&... args);
         T* try_get(Entity entity) noexcept;
@@ -31,7 +31,7 @@ namespace ecs {
         bool contains(Entity entity) const noexcept override;
         std::size_t size() const noexcept;
         bool is_empty() const noexcept;
-        std::span<const Entity> entities() const noexcept;   // forwards to entity_set_.entities()
+        std::span<const Entity> entities() const noexcept override;   // forwards to entity_set_.entities()
         std::span<T> components() noexcept;       // { components_.data(), components_.size() }
         std::span<const T> components() const noexcept;  
     private:
@@ -47,12 +47,18 @@ namespace ecs {
         if(entity_set_.index_of(entity))
             return nullptr;
 
-        components_.emplace_back(std::forward<Args>(args)...);    
-        if (!entity_set_.insert(entity)){
-            components_.pop_back();
+        if (!entity_set_.insert(entity))
             return nullptr;
-        }
 
+        try
+        {
+            components_.emplace_back(std::forward<Args>(args)...);  
+        } 
+        catch(...)
+        {
+            entity_set_.erase(entity);
+            throw;
+        }
         return std::addressof(components_.back());
     }
 

@@ -64,6 +64,11 @@ namespace ecs {
     static_assert(type_name<double>() == "double");
     static_assert(type_name<const double&>() == "double");
  
+    /// @brief A component's identity is a hash of its fully qualified type name. Two types with the same name are treated as the same component.
+    /// - Don't declare component types in an anonymous namespace. Types with the same name in different .cpp files would share a pool (undefined behaviour).
+    /// - IDs are only stable within one compiler (MSVC, GCC and Clang format type names differently). Don't serialize them.
+    /// @tparam T 
+    /// @return 
     template <typename T>
     constexpr ComponentTypeId component_type_id() noexcept
     {
