@@ -128,9 +128,7 @@ namespace ecs {
     template <typename T>
     inline std::span<T> ComponentPool<T>::components() noexcept
     {
-        return const_cast<T*>(
-            std::as_const(*this).components()
-        );
+        return components_;
     }
 
     template <typename T>

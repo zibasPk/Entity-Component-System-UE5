@@ -5,6 +5,7 @@
 #include "ecs/component_type_id.hpp"
 #include "ecs/types.hpp"
 #include "ecs/constants.hpp"
+#include "ecs/view.hpp"
 
 #include <vector>
 #include <memory>
@@ -47,13 +48,6 @@ namespace ecs {
         /// @return true if removed, false if nothing to remove
         template <typename T> bool remove_component(Entity entity) noexcept;
         template <typename T> bool has_component(Entity entity) const noexcept;
-        /// @brief Iterate over all entities who posses a certain component.
-        /// @tparam T 
-        /// @tparam Fn 
-        /// @param fn 
-        template <typename T, typename Fn> void for_each(Fn&& fn);
-
-        template <typename... Ts> class View;                    // or a free class taking pool pointers
         template <typename... Ts> View<Ts...> view() noexcept;
 
     private:
@@ -166,16 +160,10 @@ namespace ecs {
     {
         return get_component<T>(entity) != nullptr;
     }
-    
-    template <typename T, typename Fn>
-    inline void Registry::for_each(Fn &&fn)
+
+    template <typename... Ts>
+    inline View<Ts...> Registry::view() noexcept
     {
-        ComponentPool<T>* pool = find_pool<T>();
-        if (pool == nullptr)
-            return;
-        
-        for(int i = 0; i < pool->size(); ++i) {
-            fn(pool->entities(), pool->components());
-        }
+        return View<Ts...>(find_pool<Ts>()...);
     }
 }
